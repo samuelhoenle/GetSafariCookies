@@ -10,20 +10,28 @@
 
 int main(int argc, const char * argv[]) {
 	@autoreleasepool {
+		
+		printf("# HTTP Cookie File\n");
 
 		NSArray * cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
+		
 		for (NSHTTPCookie * cookie in cookies) {
+			
+			NSString * domainSpecified = [cookie.domain hasPrefix:@"."] ? @"TRUE" : @"FALSE";
+			NSString * secure = [cookie isSecure] ? @"TRUE" : @"FALSE";
 
 			NSString * line = [NSString stringWithFormat:@""
 							   "%@\t"	// domain
-							   "TRUE\t"
+							   "%@\t"	// domain specified (TRUE/FALSE)
 							   "%@\t"	// path
-							   "FALSE\t"
+							   "%@\t"	// secure (TRUE/FALSE)
 							   "%ld\t"	// expire time
 							   "%@\t"	// name
-							   "%@\n",		// value
+							   "%@\n",	// value
 							   cookie.domain,
+					   		   domainSpecified,
 							   cookie.path,
+					   		   secure,
 							   (long)cookie.expiresDate.timeIntervalSince1970,
 							   cookie.name,
 							   cookie.value];
